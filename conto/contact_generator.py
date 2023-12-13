@@ -112,5 +112,10 @@ class ContactStatistics:
 
     def __str__(self):
         return (
+            f'Contacts: {self.count} '
             f'Abandoned: {self.abandoned} '
+            f'AHT: {self.duration / self.count} '
+            f'Holds: {self.holds} '
+            f'Hold time: {self.hold_duration} '
+            f'ASA: {self.wait_time / self.count}'
         )
