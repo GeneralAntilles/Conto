@@ -124,7 +124,14 @@ class Contact:
             pass
 
     def abandon(self, abandon_timing: float):
-        """Abandon contact"""
+        """
+        Abandon contact
+
+        Contacts are abandoned when they have been queued for too long.
+        
+        Args:
+            abandon_timing (float): Time to abandon contact
+        """
         self.logger.info(f'{self} abandoned after {abandon_timing:0.0f}s')
 
         # Remove from queue
@@ -138,6 +145,10 @@ class Contact:
     def handle(self, agent: Optional[Agent]=None):
         """
         Handle contact
+
+        Contact handling process. Contacts are answered, placed on hold, and
+        completed. This function is a generator that yields timeout events for
+        call progression.
 
         Args:
             agent (Optional[Agent]): Agent to handle contact
@@ -184,6 +195,8 @@ class Contact:
         """
         Answer contact
 
+        A contact is answered when an agent is available to handle it.
+
         Args:
             agent (Optional[Agent]): Agent to answer contact
         """
@@ -211,6 +224,9 @@ class Contact:
     def end(self):
         """
         End contact
+
+        Once a contact has been handled it is ended and marked as completed. The
+        agent is marked as available.
 
         Args:
             holds (int): Number of holds during contact
