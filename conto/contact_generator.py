@@ -89,6 +89,7 @@ class ContactStatistics:
         self.logger = logging.getLogger(__name__)
 
         self.count = 0
+        self.abandoned = 0
         self.duration = 0
         self.holds = 0
         self.hold_duration = 0
@@ -102,6 +103,8 @@ class ContactStatistics:
             contact (Contact): Contact to add
         """
         self.count += 1
+        if contact.abandoned:
+            self.abandoned += 1
         self.duration += contact.duration
         self.holds += contact.holds
         self.hold_duration += contact.hold_duration
@@ -109,9 +112,5 @@ class ContactStatistics:
 
     def __str__(self):
         return (
-            f'Contact Count: {self.count} '
-            f'Contact Duration: {self.duration} '
-            f'Contact Holds: {self.holds} '
-            f'Contact Hold Duration: {self.hold_duration} '
-            f'Contact Wait Time: {self.wait_time}'
+            f'Abandoned: {self.abandoned} '
         )
