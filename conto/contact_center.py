@@ -27,12 +27,12 @@ class ContactCenter:
         self,
         env: simpy.Environment,
         contact_types: list,
-        contact_rate: float=5/60,
-        handle_time: int=300,
-        hold_probability: float=0.5,
-        hold_time: int=30,
-        abandon_time: int=120,
-        agent_count: int=10,
+        contact_rate: float = 5/60,
+        handle_time: int = 300,
+        hold_probability: float = 0.5,
+        hold_time: int = 30,
+        abandon_time: int = 120,
+        agent_count: int = 10,
     ):
         self.logger: logging.Logger = logging.getLogger(__name__)
 
@@ -65,7 +65,7 @@ class ContactCenter:
 
         self.logger.debug('Contact center created')
 
-    def start(self, until: Optional[float]=None):
+    def start(self, until: Optional[float] = None):
         """Start contact center"""
         self.logger.info('Starting contact center')
         self.env.process(self.contact_generator.start())
