@@ -15,10 +15,10 @@ A Python simulation on the backend is obviously not an ideal architecture, but i
 A contact arrives, waits in a queue, and is served by an agent. The agent then ends the contact.
 
 ```mermaid
-graph LR;
-    contact[Contact] --> queue[Queue];
-    queue --> agent[Agent];
-    agent --> 'end'[End];
+graph LR
+    contact[Contact] --> queue[Queue]
+    queue --> agent[Agent]
+    agent --> e[End]
 ```
 
 Contacts may abandon (disconnect before reaching an agent) if they wait too long in the queue. Agents may also place a contact on hold.
