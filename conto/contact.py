@@ -7,6 +7,7 @@ can be queued, abandoned, ringing, in progress, or completed.
 """
 import logging
 import random
+from collections import namedtuple
 from enum import Enum
 from typing import Optional
 
@@ -32,6 +33,11 @@ class Contact:
         IN_PROGRESS = 'in_progress'
         COMPLETED = 'completed'
 
+    default_timings: namedtuple = namedtuple(
+        'default_timings',
+        ['avg_handle_time', 'avg_hold_time', 'avg_abandon_time']
+    )(300, 30, 120)
+
     def __init__(
         self,
         env: simpy.Environment,
@@ -39,11 +45,9 @@ class Contact:
         contact_type: str,
         customer_id: int,
         skill: str = None,
-        avg_handle_time: int = 300,
-        avg_hold_time: int = 30,
         hold_probability: float = 0.5,
-        avg_abandon_time: int = 120,
         contact_center = None,
+        default_timings: namedtuple = default_timings,
     ):
         self.logger = logging.getLogger(__name__)
 
@@ -54,10 +58,11 @@ class Contact:
         self.contact_type = contact_type
         self.skill: str = skill
 
-        self.avg_handle_time: int = avg_handle_time
-        self.avg_hold_time: int = avg_hold_time
+        self.avg_handle_time: int = default_timings.avg_handle_time
+        self.avg_hold_time: int = default_timings.avg_hold_time
         self.hold_probability: float = hold_probability
-        self.abandon_timing: float =  random.expovariate(1 / avg_abandon_time)
+        self.abandon_timing: float =  random.expovariate(
+            1 /default_timings.avg_abandon_time)
 
         self.abandon_process = env.process(
             self._start_abandon_timer(self.abandon_timing))
@@ -128,7 +133,7 @@ class Contact:
         Abandon contact
 
         Contacts are abandoned when they have been queued for too long.
-        
+
         Args:
             abandon_timing (float): Time to abandon contact
         """
