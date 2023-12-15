@@ -32,9 +32,9 @@ class Agent:
         self,
         env: simpy.Environment,
         agent_id: int,
-        status: AgentStatus=AgentStatus.AVAILABLE,
-        skills: Optional[list]=None,
-        name: Optional[str]=None,
+        status: AgentStatus = AgentStatus.AVAILABLE,
+        skills: Optional[list] = None,
+        name: Optional[str] = None,
     ):
         self.logger = logging.getLogger(__name__)
 

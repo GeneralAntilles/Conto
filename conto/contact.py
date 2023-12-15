@@ -38,12 +38,12 @@ class Contact:
         contact_id: int,
         contact_type: str,
         customer_id: int,
-        skill: str=None,
-        avg_handle_time: int=300,
-        avg_hold_time: int=30,
-        hold_probability: float=0.5,
-        avg_abandon_time: int=120,
-        contact_center=None,
+        skill: str = None,
+        avg_handle_time: int = 300,
+        avg_hold_time: int = 30,
+        hold_probability: float = 0.5,
+        avg_abandon_time: int = 120,
+        contact_center = None,
     ):
         self.logger = logging.getLogger(__name__)
 

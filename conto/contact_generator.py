@@ -26,9 +26,9 @@ class ContactGenerator:
         self,
         env: simpy.Environment,
         contact_type: str,
-        contact_rate: float=5/60,
-        handle_time: int=300,
-        abandon_time: int=240,
+        contact_rate: float = 5/60,
+        handle_time: int = 300,
+        abandon_time: int = 240,
         contact_center=None,
     ):
         self.logger = logging.getLogger(__name__)
