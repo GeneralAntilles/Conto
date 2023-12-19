@@ -62,7 +62,7 @@ class Contact:
         self.avg_hold_time: int = default_timings.avg_hold_time
         self.hold_probability: float = hold_probability
         self.abandon_timing: float =  random.expovariate(
-            1 /default_timings.avg_abandon_time)
+            1 / default_timings.avg_abandon_time)
 
         self.abandon_process = env.process(
             self._start_abandon_timer(self.abandon_timing))
@@ -163,7 +163,8 @@ class Contact:
         """
         # Pre-calculate call stats
         call_duration = random.gauss(self.avg_handle_time, 90)
-        hold_duration = random.uniform(self.avg_hold_time / 2, self.avg_hold_time * 2)
+        hold_duration = random.uniform(self.avg_hold_time / 2,
+                                       self.avg_hold_time * 2)
         hold_timing = random.uniform(call_duration / 2,
                                      call_duration - (self.avg_hold_time * 2))
 
