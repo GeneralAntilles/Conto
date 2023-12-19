@@ -72,7 +72,6 @@ class ContactGenerator:
             agent = self.contact_center.request_agent()
             # If an agent is available, handle the contact
             if agent is not None:
-                contact.abandon_process.interrupt()
                 self.env.process(contact.handle(agent))
             else:
                 self.logger.debug(f'{contact} queued at {self.env.now}')

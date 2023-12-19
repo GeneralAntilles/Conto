@@ -140,12 +140,11 @@ class Contact:
         self.logger.info(f'{self} abandoned after {abandon_timing:0.0f}s')
 
         # Remove from queue
-        if self in self.contact_center.contact_queue:
-            self.contact_center.contact_queue.remove(self)
-            self.status = 'abandoned'
-        else:
-            self.logger.warning(f'{self} not in queue!')
-            pass
+        for contact in self.contact_center.contact_queue:
+            if contact.id == self.id:
+                self.contact_center.contact_queue.remove(contact)
+                self.status = 'abandoned'
+                break
 
     def handle(self, agent: Optional[Agent]=None):
         """
@@ -167,6 +166,8 @@ class Contact:
                                        self.avg_hold_time * 2)
         hold_timing = random.uniform(call_duration / 2,
                                      call_duration - (self.avg_hold_time * 2))
+
+        self.abandon_process.interrupt()
 
         # Answer
         self.answer(agent)
