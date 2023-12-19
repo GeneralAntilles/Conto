@@ -64,7 +64,7 @@ class Contact:
         self.abandon_timing: float =  random.expovariate(
             1 / default_timings.avg_abandon_time)
 
-        self.abandon_process = env.process(
+        self.abandon_process = self.env.process(
             self._start_abandon_timer(self.abandon_timing))
 
         self.arrival_time: float = self.env.now
