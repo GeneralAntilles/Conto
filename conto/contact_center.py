@@ -6,6 +6,7 @@ appropriate skills. Contacts can be queued, abandoned, ringing, in
 progress, or completed.
 """
 import logging
+from enum import Enum
 from typing import Optional
 
 import simpy
@@ -23,6 +24,12 @@ class ContactCenter:
     appropriate skills. Contacts can be queued, abandoned, ringing, in
     progress, or completed.
     """
+    class Skills(Enum):
+        """Contact skills"""
+        CUSTOMER_SERVICE = 'cs'
+        SALES = 'sales'
+        INTERNATIONAL = 'international'
+
     def __init__(
         self,
         env: simpy.Environment,

@@ -57,6 +57,7 @@ class Contact:
         self.id: int = contact_id
         self._contact_type = None
         self.contact_type = contact_type
+        self._skill = None
         self.skill: str = skill
 
         self.avg_handle_time: int = default_timings.avg_handle_time
@@ -107,6 +108,22 @@ class Contact:
         else:
             vals = ', '.join([s.value for s in self.ContactStatus])
             raise ValueError(f'Invalid status "{value}"! Must be in: {vals}')
+
+    @property
+    def skill(self):
+        """Contact skill"""
+        return self._skill
+
+    @status.setter
+    def skill(self, value):
+        """Set contact skill"""
+        if any(value == s.value for s in self.contact_center.Skills):
+            self._skill = value
+        else:
+            raise ValueError(
+                f'Invalid skill "{value}"! Must be a skill assigned to this '
+                'contact center!'
+            )
 
     @property
     def contact_type(self):
