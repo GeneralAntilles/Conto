@@ -35,8 +35,9 @@ class Contact:
 
     default_timings: namedtuple = namedtuple(
         'default_timings',
-        ['avg_handle_time', 'avg_hold_time', 'avg_abandon_time']
-    )(300, 30, 120)
+        ['avg_handle_time', 'avg_hold_time', 'avg_abandon_time',
+         'avg_wrap_up_time']
+    )(300, 30, 120, 60)
 
     def __init__(
         self,
@@ -63,6 +64,7 @@ class Contact:
         self.hold_probability: float = hold_probability
         self.abandon_timing: float =  random.expovariate(
             1 / default_timings.avg_abandon_time)
+        self.avg_wrap_up_time: int = default_timings.avg_wrap_up_time
 
         self.abandon_process = self.env.process(
             self._start_abandon_timer(self.abandon_timing))
@@ -166,6 +168,7 @@ class Contact:
                                        self.avg_hold_time * 2)
         hold_timing = random.uniform(call_duration / 2,
                                      call_duration - (self.avg_hold_time * 2))
+        wrap_up_duration = random.expovariate(1 / self.avg_wrap_up_time)
 
         self.abandon_process.interrupt()
 
@@ -191,7 +194,7 @@ class Contact:
             yield self.env.timeout(call_duration)
 
         # End
-        self.end()
+        self.end(wrap_up_duration)
 
         # Check queue
         if len(self.contact_center.contact_queue) > 0:
@@ -228,18 +231,14 @@ class Contact:
         yield self.env.timeout(hold_duration)
         self.logger.debug(f'{self} taken off hold at {self.env.now}')
 
-    def end(self):
+    def wrap_up(self):
         """
-        End contact
+        Wrap up contact
 
-        Once a contact has been handled it is ended and marked as completed. The
-        agent is marked as available.
-
-        Args:
-            holds (int): Number of holds during contact
+        Once a contact has been handled it is ended and marked as completed.
+        The agent is marked as available.
         """
-        self.logger.debug(f'{self} completed at {self.env.now}')
-        self.duration = self.env.now - self.arrival_time
+        self.logger.debug(f'{self} entered wrap-up at {self.env.now}')
         call_completion_str = (
             f'{self} queued for {self.wait_time:0.0f}s, '
             f'handled by {self.handled_by} in {self.duration:0.0f}s'
@@ -250,5 +249,34 @@ class Contact:
                 f' ({self.hold_count} {hold} for {self.hold_duration:0.0f}s)'
             )
         self.logger.info(call_completion_str)
-        self.handled_by.status = 'available'
+
+        yield self.env.timeout(self.avg_wrap_up_time)
+
+        self.handled_by.status = 'wrap_up'
+        self.status = 'completed'
+
+    def end(self, wrap_up_duration: float):
+        """
+        End contact
+
+        Once a contact has been handled it is ended and marked as completed. The
+        agent is marked as available.
+
+        Args:
+            wrap_up_duration (float): Duration of wrap up
+        """
+        self.logger.debug(f'{self} completed at {self.env.now}')
+        self.handled_by.status = 'wrap_up'
+        self.duration = self.env.now - self.arrival_time + wrap_up_duration
+        call_completion_str = (
+            f'{self} queued for {self.wait_time:0.0f}s, '
+            f'handled by {self.handled_by} in {self.duration:0.0f}s'
+        )
+        if self.hold_count > 0:
+            hold = 'holds' if self.hold_count > 1 else 'hold'
+            call_completion_str += (
+                f' ({self.hold_count} {hold} for {self.hold_duration:0.0f}s)'
+            )
+        self.logger.info(call_completion_str)
+
         self.status = 'completed'

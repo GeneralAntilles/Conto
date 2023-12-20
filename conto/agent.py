@@ -27,6 +27,7 @@ class Agent:
         BUSY = 'busy'
         NOT_AVAILABLE = 'not_available'
         OFFLINE = 'offline'
+        WRAP_UP = 'wrap_up'
 
     def __init__(
         self,
@@ -61,6 +62,12 @@ class Agent:
         last_names = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'Garcia', 'Rodriguez', 'Wilson', 'Martinez', 'Anderson', 'Taylor', 'Thomas', 'Hernandez', 'Moore', 'Martin', 'Jackson', 'Thompson', 'White', 'Lopez', 'Lee', 'Gonzalez', 'Harris', 'Clark', 'Lewis', 'Robinson', 'Walker', 'Perez', 'Hall', 'Young', 'Allen', 'Sanchez', 'Wright', 'King', 'Scott', 'Green', 'Baker', 'Adams', 'Nelson', 'Hill', 'Ramirez', 'Campbell', 'Mitchell', 'Roberts', 'Carter', 'Phillips', 'Evans', 'Turner', 'Torres', 'Parker', 'Collins', 'Edwards', 'Stewart', 'Flores', 'Morris', 'Nguyen', 'Murphy', 'Rivera', 'Cook', 'Rogers', 'Morgan', 'Peterson', 'Cooper', 'Reed', 'Bailey', 'Bell', 'Gomez', 'Kelly', 'Howard', 'Ward', 'Cox', 'Diaz', 'Richardson', 'Wood', 'Watson', 'Brooks', 'Bennett', 'Gray', 'James', 'Reyes', 'Cruz', 'Hughes', 'Price', 'Myers', 'Long', 'Foster', 'Sanders', 'Ross', 'Morales', 'Powell', 'Sullivan', 'Russell', 'Ortiz', 'Jenkins', 'Gutierrez', 'Perry', 'Butler', 'Barnes', 'Fisher']
         return f'{random.choice(first_names)} {random.choice(last_names)}'
 
+    def _start_wrap_up_timer(self, avg_wrap_up_time: int = 30):
+        """Start wrap up timer"""
+        wrap_up_time = random.expovariate(1 / avg_wrap_up_time)
+        yield self.env.timeout(wrap_up_time)
+        self.status = Agent.AgentStatus.AVAILABLE
+
     @property
     def status(self):
         """Agent status"""
@@ -71,6 +78,22 @@ class Agent:
         """Set agent status"""
         if any(value == s.value for s in self.AgentStatus):
             self._status = value
+            self.last_status_change = self.env.now
+
+            if self._status != Agent.AgentStatus.WRAP_UP:
+                self.logger.debug(
+                    f'{self} changed status to {self._status} at '
+                    f'T+{self.last_status_change:0.0f}s'
+                )
+            else:
+                self.logger.debug(
+                    f'{self} changed status to {self._status} at '
+                    f'T+{self.last_status_change:0.0f}s, starting wrap up timer'
+                    '...'
+                )
+                self.env.process(self._start_wrap_up_timer())
+                self.status = Agent.AgentStatus.AVAILABLE
+
         else:
             vals = ', '.join([s.value for s in self.AgentStatus])
             raise ValueError(f'Invalid status "{value}"! Must be in: {vals}')
