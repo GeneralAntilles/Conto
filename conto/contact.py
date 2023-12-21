@@ -229,7 +229,7 @@ class Contact:
         """
         self.answer_time = self.env.now
         self.wait_time = self.answer_time - self.arrival_time
-        self.logger.debug(f'{self} answered at {self.answer_time}')
+        self.logger.debug(f'{self} answered at {self.answer_time:0.0f}')
         agent.status = 'busy'
         self.handled_by = agent
         self.status = 'in_progress'
@@ -244,9 +244,9 @@ class Contact:
         Yields:
             simpy.events.Timeout: Timeout event for hold duration
         """
-        self.logger.debug(f'{self} placed on hold at {self.env.now}')
+        self.logger.debug(f'{self} placed on hold at {self.env.now:0.0f}')
         yield self.env.timeout(hold_duration)
-        self.logger.debug(f'{self} taken off hold at {self.env.now}')
+        self.logger.debug(f'{self} taken off hold at {self.env.now:0.0f}')
 
     def wrap_up(self):
         """
@@ -255,7 +255,7 @@ class Contact:
         Once a contact has been handled it is ended and marked as completed.
         The agent is marked as available.
         """
-        self.logger.debug(f'{self} entered wrap-up at {self.env.now}')
+        self.logger.debug(f'{self} entered wrap-up at {self.env.now:0.0f}')
         call_completion_str = (
             f'{self} queued for {self.wait_time:0.0f}s, '
             f'handled by {self.handled_by} in {self.duration:0.0f}s'
@@ -282,7 +282,7 @@ class Contact:
         Args:
             wrap_up_duration (float): Duration of wrap up
         """
-        self.logger.debug(f'{self} completed at {self.env.now}')
+        self.logger.debug(f'{self} completed at {self.env.now:0.0f}')
         self.handled_by.status = 'wrap_up'
         self.duration = self.env.now - self.arrival_time + wrap_up_duration
         call_completion_str = (

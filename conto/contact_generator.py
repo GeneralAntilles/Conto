@@ -74,7 +74,7 @@ class ContactGenerator:
             if agent is not None:
                 self.env.process(contact.handle(agent))
             else:
-                self.logger.debug(f'{contact} queued at {self.env.now}')
+                self.logger.debug(f'{contact} arrived at {self.env.now:0.0f}')
                 self.contact_center.contact_queue.append(contact)
 
 
