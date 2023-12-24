@@ -11,6 +11,7 @@ from collections import namedtuple
 from enum import Enum
 from typing import Optional
 
+import numpy as np
 import simpy
 
 from agent import Agent
@@ -65,8 +66,8 @@ class Contact:
         self.avg_handle_time: int = default_timings.avg_handle_time
         self.avg_hold_time: int = default_timings.avg_hold_time
         self.hold_probability: float = hold_probability
-        self.abandon_timing: float =  random.expovariate(
-            1 / default_timings.avg_abandon_time)
+        self.abandon_timing: float =  ((default_timings.avg_abandon_time) *
+                                        np.random.weibull(1.5))
         self.avg_wrap_up_time: int = default_timings.avg_wrap_up_time
 
         self.abandon_process = self.env.process(
