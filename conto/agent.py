@@ -49,10 +49,10 @@ class Agent:
         self.logger.debug(f'Agent {self.id} created')
 
     def __str__(self):
-        return f'{self.name} ({self.id})'
+        return f'{self.name}#{self.id}'
 
     def __repr__(self):
-        return f'{self.name} ({self.id})'
+        return f'{self.name}#{self.id}'
 
     def _generate_name(self):
         """Generate agent name"""
