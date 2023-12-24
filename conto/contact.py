@@ -210,8 +210,8 @@ class Contact:
         call_duration = max(0, random.gauss(self.avg_handle_time, 90))
         hold_duration = random.uniform(self.avg_hold_time / 2,
                                        self.avg_hold_time * 2)
-        hold_timing = random.uniform(call_duration / 2,
-                                     call_duration - (self.avg_hold_time * 2))
+        hold_timing = max(5, random.uniform(call_duration / 2,
+                                     call_duration - (self.avg_hold_time * 2)))
         wrap_up_duration = random.expovariate(1 / self.avg_wrap_up_time)
 
         self.abandon_process.interrupt()
