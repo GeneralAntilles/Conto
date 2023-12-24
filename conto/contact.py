@@ -180,7 +180,7 @@ class Contact:
             simpy.events.Timeout: Timeout events for call progression
         """
         # Pre-calculate call stats
-        call_duration = random.gauss(self.avg_handle_time, 90)
+        call_duration = max(0, random.gauss(self.avg_handle_time, 90))
         hold_duration = random.uniform(self.avg_hold_time / 2,
                                        self.avg_hold_time * 2)
         hold_timing = random.uniform(call_duration / 2,
