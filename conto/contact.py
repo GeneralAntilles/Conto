@@ -122,7 +122,9 @@ class Contact:
     @status.setter
     def skill(self, value):
         """Set contact skill"""
-        if any(value == s.value for s in self.contact_center.Skills):
+        if value is None:
+            self._skill = value
+        elif any(value == s.value for s in self.contact_center.Skills):
             self._skill = value
         else:
             raise ValueError(
