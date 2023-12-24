@@ -13,6 +13,7 @@ import simpy
 
 from agent import Agent
 from contact_generator import ContactGenerator
+from contact_statistics import ContactStatistics
 from contact_type import ContactType
 
 
@@ -51,6 +52,8 @@ class ContactCenter:
         self.hold_time: int = hold_time
         self.abandon_time: int = abandon_time
         self.agent_count: int = agent_count
+
+        self.contact_statistics: ContactStatistics = ContactStatistics()
 
         self.agents: simpy.Resource = simpy.Resource(self.env,
                                                      capacity=self.agent_count)

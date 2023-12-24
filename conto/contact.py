@@ -316,3 +316,5 @@ class Contact:
         self.logger.info(call_completion_str)
 
         self.status = 'completed'
+
+        self.contact_center.contact_statistics.add_contact(self)
