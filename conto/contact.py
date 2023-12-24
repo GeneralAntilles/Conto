@@ -189,6 +189,9 @@ class Contact:
                 self.status = 'abandoned'
                 break
 
+        # Log contact
+        self.contact_center.contact_statistics.add_contact(self)
+
     def handle(self, agent: Optional[Agent]=None):
         """
         Handle contact
