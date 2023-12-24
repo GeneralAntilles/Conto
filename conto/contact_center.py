@@ -86,7 +86,7 @@ class ContactCenter:
         # Get agent with longest idle time who is available
         available_agents = [
             a for a in self.agent_list
-            if a.status == Agent.AgentStatus.AVAILABLE
+            if a.status == 'available'
         ]
         if len(available_agents) > 0:
             # Return agent with longest idle time

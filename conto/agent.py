@@ -33,7 +33,7 @@ class Agent:
         self,
         env: simpy.Environment,
         agent_id: int,
-        status: AgentStatus = AgentStatus.AVAILABLE,
+        status: AgentStatus = 'available',
         skills: Optional[list] = None,
         name: Optional[str] = None,
     ):
@@ -66,7 +66,7 @@ class Agent:
         """Start wrap up timer"""
         wrap_up_time = random.expovariate(1 / avg_wrap_up_time)
         yield self.env.timeout(wrap_up_time)
-        self.status = Agent.AgentStatus.AVAILABLE
+        self.status = 'available'
 
     @property
     def status(self):
@@ -92,7 +92,7 @@ class Agent:
                     '...'
                 )
                 self.env.process(self._start_wrap_up_timer())
-                self.status = Agent.AgentStatus.AVAILABLE
+                self.status = 'available'
 
         else:
             vals = ', '.join([s.value for s in self.AgentStatus])
