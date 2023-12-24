@@ -166,7 +166,7 @@ class Contact:
         """
         self.logger.debug(f'{self} has arrived at {self.env.now:0.0f}')
         # TODO: Move arrival time hardcoding to the defaults.
-        yield self.env.timeout(random.gauss(10, 3))
+        yield self.env.timeout(max(1, random.gauss(10, 3)))
         # Simulate a menu selection
         # self.skill = random.choice(self.contact_center.Skills)
         self.skill = 'sales'
