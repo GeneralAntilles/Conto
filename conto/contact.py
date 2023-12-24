@@ -122,7 +122,7 @@ class Contact:
         """Contact skill"""
         return self._skill
 
-    @status.setter
+    @skill.setter
     def skill(self, value):
         """Set contact skill"""
         if value is None:
