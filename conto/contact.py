@@ -283,20 +283,11 @@ class Contact:
         The agent is marked as available.
         """
         self.logger.debug(f'{self} entered wrap-up at {self.env.now:0.0f}')
-        call_completion_str = (
-            f'{self} queued for {self.wait_time:0.0f}s, '
-            f'handled by {self.handled_by} in {self.duration:0.0f}s'
-        )
-        if self.hold_count > 0:
-            hold = 'holds' if self.hold_count > 1 else 'hold'
-            call_completion_str += (
-                f' ({self.hold_count} {hold} for {self.hold_duration:0.0f}s)'
-            )
-        self.logger.info(call_completion_str)
+
+        self.handled_by.status = 'wrap_up'
 
         yield self.env.timeout(self.avg_wrap_up_time)
 
-        self.handled_by.status = 'wrap_up'
         self.status = 'completed'
 
     def end(self, wrap_up_duration: float):
@@ -313,8 +304,9 @@ class Contact:
         self.handled_by.status = 'wrap_up'
         self.duration = self.env.now - self.arrival_time + wrap_up_duration
         call_completion_str = (
-            f'{self} queued for {self.wait_time:0.0f}s, '
-            f'handled by {self.handled_by} in {self.duration:0.0f}s'
+            f'{self} queued for {self.wait_time:0.0f}s, assigned to skill '
+            f'{self.skill}, handled by {self.handled_by} in '
+            f'{self.duration:0.0f}s'
         )
         if self.hold_count > 0:
             hold = 'holds' if self.hold_count > 1 else 'hold'
