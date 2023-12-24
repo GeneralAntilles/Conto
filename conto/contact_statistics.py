@@ -31,6 +31,7 @@ class ContactStatistics:
         self.logger = logging.getLogger(__name__)
 
         self.count = 0
+        self.handled = 0
         self.abandoned = 0
         self.duration = 0
         self.hold_count = 0
@@ -47,6 +48,8 @@ class ContactStatistics:
         self.count += 1
         if contact.abandoned:
             self.abandoned += 1
+        if contact.status == 'completed':
+            self.handled += 1
         self.duration += contact.duration
         self.hold_count += contact.hold_count
         self.hold_duration += contact.hold_duration
@@ -70,12 +73,12 @@ class ContactStatistics:
     @property
     def asa(self):
         """Average speed of answer"""
-        return self.wait_time / self.count if self.count > 0 else 0
+        return self.wait_time / self.handled if self.handled > 0 else 0
 
     def __str__(self):
         return (
             f'Contacts: {self.count} '
-            f'Handled: {self.count - self.abandoned} '
+            f'Handled: {self.handled} '
             f'Abandonment rate: {self.abandonement_rate:0.2%} '
             f'AHT: {self.aht:0.0f}s '
             f'Holds: {self.hold_count} '
