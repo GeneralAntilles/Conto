@@ -27,6 +27,7 @@ class Contact:
     """
     class ContactStatus(Enum):
         """Contact statuses"""
+        ARRIVAL = 'arrival'
         QUEUED = 'queued'
         ABANDONED = 'abandoned'
         RINGING = 'ringing'
@@ -53,6 +54,7 @@ class Contact:
         self.logger = logging.getLogger(__name__)
 
         self.env: simpy.Environment = env
+        self.contact_center = contact_center
 
         self.id: int = contact_id
         self._contact_type = None
@@ -80,9 +82,9 @@ class Contact:
         self.wait_time: float = 0
 
         self._status = None
-        self.status = 'queued'
+        self.status = 'arrival'
 
-        self.contact_center = contact_center
+        self.env.process(self.arrival())
 
         self.logger.info(
             f'{self.contact_type.title()} {self.id} arrived at '
@@ -154,6 +156,21 @@ class Contact:
         except simpy.Interrupt:
             pass
 
+    def arrival(self):
+        """
+        Contact arrival
+
+        Arrival is when a contact initially enters a contact flow but before
+        it's been queued with a skill for routing to an agent. In other words,
+        this is where a customer selects a menu option.
+        """
+        self.logger.debug(f'{self} has arrived at {self.env.now:0.0f}')
+        # TODO: Move arrival time hardcoding to the defaults.
+        yield self.env.timeout(random.gauss(10, 3))
+        # Simulate a menu selection
+        # self.skill = random.choice(self.contact_center.Skills)
+        self.skill = 'sales'
+
     def abandon(self, abandon_timing: float):
         """
         Abandon contact
@@ -216,6 +233,9 @@ class Contact:
         else:
             # Wait for call to complete
             yield self.env.timeout(call_duration)
+
+        # Wrap up
+        yield self.env.process(self.wrap_up())
 
         # End
         self.end(wrap_up_duration)
