@@ -96,6 +96,11 @@ class Contact:
         return f'{self.contact_type.title()} {self.id}'
 
     @property
+    def abandoned(self):
+        """Contact abandoned"""
+        return self.status == 'abandoned'
+
+    @property
     def status(self):
         """Contact status"""
         return self._status
