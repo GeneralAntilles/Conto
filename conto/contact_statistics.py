@@ -42,7 +42,8 @@ class ContactStatistics:
     def _repr_str(self):
         return (
             f'ContactStatistics(count={self.count}, handled={self.handled}, '
-            f'abandonment_rate={self.abandonment_rate}, aht={self.aht:0.2f}, '
+            f'abandonment_rate={self.abandonment_rate:0.2%}, '
+            f'aht={self.aht:0.2f}, '
             f'hold_count={self.hold_count}, '
             f'avg_hold_time={self.avg_hold_time:0.2f}, '
             f'asa={self.asa:0.2f})'
