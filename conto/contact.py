@@ -322,3 +322,4 @@ class Contact:
         self.status = 'completed'
 
         self.contact_center.contact_statistics.add_contact(self)
+        self.handled_by.statistics.add_contact(self)

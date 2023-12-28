@@ -13,6 +13,8 @@ from typing import Optional
 
 import simpy
 
+from agent_statistics import AgentStatistics
+
 
 class Agent:
     """
@@ -45,6 +47,8 @@ class Agent:
         self.skills: list = skills
         self._status = status
         self.last_status_change: float = self.env.now
+
+        self.statistics: AgentStatistics = AgentStatistics()
 
         self.logger.debug(f'Agent {self.id} created')
 
