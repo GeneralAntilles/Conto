@@ -80,7 +80,7 @@ class ContactStatistics:
     @property
     def aht(self):
         """Average handle time"""
-        return self.duration / self.count if self.count > 0 else 0
+        return self.duration / self.handled if self.handled > 0 else 0
 
     @property
     def avg_hold_time(self):
