@@ -56,8 +56,8 @@ class ContactStatistics:
         self.wait_time += contact.wait_time
 
     @property
-    def abandonement_rate(self):
-        """Abandonement rate"""
+    def abandonment_rate(self):
+        """abandonment rate"""
         return self.abandoned / self.count if self.count > 0 else 0
 
     @property
