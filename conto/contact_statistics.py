@@ -38,6 +38,22 @@ class ContactStatistics:
         self.hold_duration = 0
         self.wait_time = 0
 
+    @property
+    def _repr_str(self):
+        return (
+            f'ContactStatistics(count={self.count}, handled={self.handled}, '
+            f'abandonment_rate={self.abandonment_rate}, aht={self.aht:0.2f}, '
+            f'hold_count={self.hold_count}, '
+            f'avg_hold_time={self.avg_hold_time:0.2f}, '
+            f'asa={self.asa:0.2f})'
+        )
+
+    def __str__(self):
+        return self._repr_str
+
+    def __repr__(self):
+        return self._repr_str
+
     def add_contact(self, contact: Contact):
         """
         Add contact to statistics
@@ -74,14 +90,3 @@ class ContactStatistics:
     def asa(self):
         """Average speed of answer"""
         return self.wait_time / self.handled if self.handled > 0 else 0
-
-    def __str__(self):
-        return (
-            f'Contacts: {self.count} '
-            f'Handled: {self.handled} '
-            f'Abandonment rate: {self.abandonement_rate:0.2%} '
-            f'AHT: {self.aht:0.0f}s '
-            f'Holds: {self.hold_count} '
-            f'Avg hold time: {self.avg_hold_time:0.0f}s '
-            f'ASA: {self.asa:0.0f}s'
-        )
