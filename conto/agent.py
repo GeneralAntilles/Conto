@@ -22,6 +22,13 @@ class Agent:
 
     Agents handle contacts with skills they possess. Agents can be available,
     busy, not available, or offline.
+
+    Args:
+        env (simpy.Environment): Simpy environment
+        agent_id (int): Agent ID
+        status (AgentStatus): Agent status
+        skills (list): Agent skills
+        name (str): Agent name
     """
     class AgentStatus(Enum):
         """Agent statuses"""
