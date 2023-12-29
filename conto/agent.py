@@ -29,6 +29,8 @@ class Agent:
         status (AgentStatus): Agent status
         skills (list): Agent skills
         name (str): Agent name
+        proficiency (float): Value that handle time is multiplied by based
+            on agent proficiency level
     """
     class AgentStatus(Enum):
         """Agent statuses"""
@@ -45,6 +47,7 @@ class Agent:
         status: AgentStatus = 'available',
         skills: Optional[list] = None,
         name: Optional[str] = None,
+        proficiency: float = 1.0,
     ):
         self.logger = logging.getLogger(__name__)
 
@@ -52,6 +55,7 @@ class Agent:
         self.id: int = agent_id
         self.name: str = self._generate_name() if name is None else name
         self.skills: list = skills
+        self.proficiency: float = proficiency
         self._status = status
         self.last_status_change: float = self.env.now
 
