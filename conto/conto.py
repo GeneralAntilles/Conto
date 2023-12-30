@@ -14,7 +14,6 @@ from typing import Optional
 import simpy
 
 from contact_center import ContactCenter
-from contact_type import ContactType
 
 
 if __name__ == '__main__':

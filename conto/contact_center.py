@@ -14,7 +14,6 @@ import simpy
 from agent import Agent
 from contact_generator import ContactGenerator
 from contact_statistics import ContactStatistics
-from contact_type import ContactType
 
 
 class ContactCenter:
