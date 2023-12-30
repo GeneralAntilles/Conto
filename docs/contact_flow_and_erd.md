@@ -67,3 +67,17 @@ sequenceDiagram
     end
 ```
 
+```mermaid
+graph TD
+    A[Customer initiates contact] -->|Contact created| B[Contact]
+    B -->|If Agent available| C[Assigned to Agent]
+    B -->|If no Agent available| D[Placed in queue]
+    D -->|Agent becomes available| C
+    D -->|Waiting too long| E[Contact abandons and removed from queue]
+    C --> F[Contact handled by Agent]
+    F -->|Answer| G[Hold]
+    G -->|Hold| H[Wrap-up]
+    H -->|Wrap-up| I[End]
+    I -->|End| J[Contact marked complete]
+    J --> K[Agent made available]
+```
