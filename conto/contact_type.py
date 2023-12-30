@@ -5,6 +5,7 @@ Enum of possible contact types.
 """
 from enum import Enum
 
+
 class ContactType(Enum):
     """Contact types"""
     CALL = 'call'
