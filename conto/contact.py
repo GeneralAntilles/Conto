@@ -177,6 +177,7 @@ class Contact:
         # Simulate a menu selection
         # self.skill = random.choice(self.contact_center.Skills)
         self.skill = 'sales'
+        self.status = 'queued'
 
     def abandon(self, abandon_timing: float):
         """
