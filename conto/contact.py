@@ -127,6 +127,12 @@ class Contact:
         """Set contact skill"""
         if value is None:
             self._skill = value
+        elif self.contact_center is None:
+            self._skill = value
+            self.logger.debug(
+                'No contact center assigned to contact! Skill will not be '
+                'validated.'
+            )
         elif any(value == s.value for s in self.contact_center.Skills):
             self._skill = value
         else:
@@ -183,15 +189,17 @@ class Contact:
         """
         self.logger.info(f'{self} abandoned after {abandon_timing:0.0f}s')
 
-        # Remove from queue
-        for contact in self.contact_center.contact_queue:
-            if contact.id == self.id:
-                self.contact_center.contact_queue.remove(contact)
-                self.status = 'abandoned'
-                break
+        self.status = 'abandoned'
 
-        # Log contact
-        self.contact_center.contact_statistics.add_contact(self)
+        # Remove from queue
+        if self.contact_center is not None:
+            for contact in self.contact_center.contact_queue:
+                if contact.id == self.id:
+                    self.contact_center.contact_queue.remove(contact)
+                    break
+
+            # Log contact
+            self.contact_center.contact_statistics.add_contact(self)
 
     def handle(self, agent: Optional[Agent]=None):
         """
@@ -246,9 +254,10 @@ class Contact:
         self.end(wrap_up_duration)
 
         # Check queue
-        if len(self.contact_center.contact_queue) > 0:
-            next_contact = self.contact_center.contact_queue.pop(0)
-            self.env.process(next_contact.handle(agent))
+        if self.contact_center is not None:
+            if len(self.contact_center.contact_queue) > 0:
+                next_contact = self.contact_center.contact_queue.pop(0)
+                self.env.process(next_contact.handle(agent))
 
     def answer(self, agent: Optional[Agent]=None):
         """
@@ -322,5 +331,6 @@ class Contact:
 
         self.status = 'completed'
 
-        self.contact_center.contact_statistics.add_contact(self)
+        if self.contact_center is not None:
+            self.contact_center.contact_statistics.add_contact(self)
         self.handled_by.statistics.add_contact(self)
