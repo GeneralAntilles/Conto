@@ -287,6 +287,8 @@ class Contact:
             simpy.events.Timeout: Timeout event for hold duration
         """
         self.logger.debug(f'{self} placed on hold at {self.env.now:0.0f}')
+        self.hold_duration += hold_duration
+        self.hold_count += 1
         yield self.env.timeout(hold_duration)
         self.logger.debug(f'{self} taken off hold at {self.env.now:0.0f}')
 
