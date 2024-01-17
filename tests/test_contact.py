@@ -25,10 +25,9 @@ class TestContact:
         Returns:
             tuple: Environment, Contact, Agent
         """
-        env = simpy.Environment()
-        contact = Contact(env, 1, 'call', 1)
-        agent = Agent(env, 1)
-        return env, contact, agent
+        self.env = simpy.Environment()
+        self.contact = Contact(self.env, 1, 'call', 1)
+        self.agent = Agent(self.env, 1)
 
     def test_abandon(self, setup):
         """
@@ -37,15 +36,14 @@ class TestContact:
         Args:
             setup (tuple): Environment, Contact, Agent
         """
-        env, contact, _ = setup
-        contact.abandon(1)
-        assert contact.status == 'abandoned'
+        self.contact.abandon(1)
+        assert self.contact.status == 'abandoned'
 
     # def test_arrival(self, setup):
     #     env, contact, _ = setup
-    #     assert contact.arrival_time == env.now
-    #     assert contact.skill == 'sales'
-    #     assert contact.status == 'queued'
+    #     assert self.contact.arrival_time == env.now
+    #     assert self.contact.skill == 'sales'
+    #     assert self.contact.status == 'queued'
 
     def test_answer(self, setup):
         """
@@ -54,13 +52,12 @@ class TestContact:
         Args:
             setup (tuple): Environment, Contact, Agent
         """
-        env, contact, agent = setup
-        contact.answer(agent)
-        assert contact.answer_time == env.now
-        assert contact.wait_time == env.now - contact.arrival_time
-        assert agent.status == 'busy'
-        assert contact.handled_by == agent
-        assert contact.status == 'in_progress'
+        self.contact.answer(self.agent)
+        assert self.contact.answer_time == self.env.now
+        assert self.contact.wait_time == self.env.now - self.contact.arrival_time
+        assert self.agent.status == 'busy'
+        assert self.contact.handled_by == self.agent
+        assert self.contact.status == 'in_progress'
 
     def test_hold(self, setup):
         """
@@ -69,27 +66,26 @@ class TestContact:
         Args:
             setup (tuple): Environment, Contact, Agent
         """
-        env, contact, agent = setup
         hold_duration = 10
 
         # Answer the contact
-        contact.abandon_process.interrupt()
-        contact.answer(agent)
-        assert contact.status == 'in_progress'
+        self.contact.abandon_process.interrupt()
+        self.contact.answer(self.agent)
+        assert self.contact.status == 'in_progress'
 
         # Test first hold
-        env.run(until=10)
-        env.process(contact.hold(hold_duration))
-        env.run(until=env.now + hold_duration)
-        assert contact.hold_duration == hold_duration
-        assert contact.hold_count == 1
+        self.env.run(until=10)
+        self.env.process(self.contact.hold(hold_duration))
+        self.env.run(until=self.env.now + hold_duration)
+        assert self.contact.hold_duration == hold_duration
+        assert self.contact.hold_count == 1
 
         # Test second hold
-        env.run(until=env.now + 1)
-        env.process(contact.hold(hold_duration))
-        env.run(until=env.now + hold_duration)
-        assert contact.hold_duration == hold_duration * 2
-        assert contact.hold_count == 2
+        self.env.run(until=self.env.now + 1)
+        self.env.process(self.contact.hold(hold_duration))
+        self.env.run(until=self.env.now + hold_duration)
+        assert self.contact.hold_duration == hold_duration * 2
+        assert self.contact.hold_count == 2
 
     def test_wrap_up(self, setup):
         """
@@ -98,10 +94,9 @@ class TestContact:
         Args:
             setup (tuple): Environment, Contact, Agent
         """
-        env, contact, agent = setup
-        contact.abandon_process.interrupt()
-        contact.answer(agent)
-        env.process(contact.wrap_up())
-        env.run(until=env.now + contact.avg_wrap_up_time)
-        assert agent.status == 'wrap_up'
-        assert contact.handled_by == agent
+        self.contact.abandon_process.interrupt()
+        self.contact.answer(self.agent)
+        self.env.process(self.contact.wrap_up())
+        self.env.run(until=self.env.now + self.contact.avg_wrap_up_time)
+        assert self.agent.status == 'wrap_up'
+        assert self.contact.handled_by == self.agent
