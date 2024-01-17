@@ -29,6 +29,20 @@ class TestContact:
         self.contact = Contact(self.env, 1, 'call', 1)
         self.agent = Agent(self.env, 1)
 
+    def test_init(self, setup):
+        """
+        Test init
+
+        Args:
+            setup (tuple): Environment, Contact, Agent
+        """
+        assert self.contact.id == 1
+        assert self.contact.contact_type == 'call'
+        assert self.contact.arrival_time == 0
+        assert self.contact.status == 'arrival'
+        assert self.contact.handled_by is None
+        assert self.contact.wait_time == 0
+
     def test_abandon(self, setup):
         """
         Test abandon
