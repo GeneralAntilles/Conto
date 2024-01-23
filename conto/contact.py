@@ -51,6 +51,7 @@ class Contact:
         hold_probability: float = 0.5,
         contact_center = None,
         default_timings: namedtuple = default_timings,
+        **kwargs,
     ):
         self.logger = logging.getLogger(__name__)
 
@@ -69,6 +70,11 @@ class Contact:
         self.abandon_timing: float =  ((default_timings.avg_abandon_time) *
                                         np.random.weibull(1.5))
         self.avg_wrap_up_time: int = default_timings.avg_wrap_up_time
+
+        # If we get any of the timings as kwargs, overwrite the default
+        for key, value in kwargs.items():
+            if key in default_timings._fields:
+                setattr(self, key, value)
 
         self.abandon_process = self.env.process(
             self._start_abandon_timer(self.abandon_timing))
