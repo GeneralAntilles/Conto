@@ -25,6 +25,21 @@ class Contact:
     Contacts arrive at the contact center and are queued until an agent is
     available to handle them. Contacts can be calls, chats, or emails. Contacts
     can be queued, abandoned, ringing, in progress, or completed.
+
+    Args:
+        env (simpy.Environment): Simpy environment
+        contact_id (int): Contact ID
+        contact_type (str): Type of contact (e.g., call, chat, email)
+        customer_id (int): Customer ID
+        skill (str): Contact skill the contact is assigned to
+        hold_probability (float): Probability of contact being placed on hold
+            as a float between 0 and 1
+        contact_center (ContactCenter): Contact center the contact is assigned
+            to
+        default_timings (namedtuple): Default timings as a namedtuple with
+            fields avg_handle_time, avg_hold_time, avg_abandon_time, and
+            avg_wrap_up_time
+        **kwargs: Additional keyword arguments to overwrite default timings
     """
     class ContactStatus(Enum):
         """Contact statuses"""
