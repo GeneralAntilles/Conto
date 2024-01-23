@@ -245,8 +245,6 @@ class Contact:
             # Wait before placing on hold
             yield self.env.timeout(hold_timing)
             yield self.env.process(self.hold(hold_duration))
-            self.hold_count += 1
-            self.hold_duration += hold_duration
 
             # Wait for remainder of call
             yield self.env.timeout(call_duration - hold_duration)
