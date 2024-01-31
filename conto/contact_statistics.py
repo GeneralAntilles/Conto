@@ -44,7 +44,7 @@ class ContactStatistics:
             f'ContactStatistics(count={self.count}, handled={self.handled}, '
             f'abandonment_rate={self.abandonment_rate:0.2%}, '
             f'aht={self.aht:0.2f}, '
-            f'hold_count={self.hold_count}, '
+            f'holds_per_contact={self.holds_per_contact:0.2f}, '
             f'avg_hold_time={self.avg_hold_time:0.2f}, '
             f'asa={self.asa:0.2f})'
         )
@@ -91,3 +91,8 @@ class ContactStatistics:
     def asa(self):
         """Average speed of answer"""
         return self.wait_time / self.handled if self.handled > 0 else 0
+
+    @property
+    def holds_per_contact(self):
+        """Holds per contact"""
+        return self.hold_count / self.count if self.count > 0 else 0
