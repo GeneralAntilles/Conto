@@ -68,7 +68,7 @@ class ContactCenter:
             self.contact_types,
             contact_rate=self.contact_rate,
             handle_time=self.handle_time,
-            abandon_time=self.abandon_time,
+            avg_abandon_time=self.abandon_time,
             hold_probability=self.hold_probability,
             contact_center=self,
         )
