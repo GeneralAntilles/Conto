@@ -63,7 +63,7 @@ class Contact:
         contact_type: str,
         customer_id: int,
         skill: str = None,
-        hold_probability: float = 0.5,
+        hold_probability: float = 0.15,
         contact_center = None,
         default_timings: namedtuple = default_timings,
         **kwargs,
