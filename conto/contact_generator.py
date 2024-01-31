@@ -29,6 +29,7 @@ class ContactGenerator:
         contact_rate: float = 5/60,
         handle_time: int = 300,
         abandon_time: int = 240,
+        hold_probability: float = 0.1,
         contact_center=None,
     ):
         self.logger = logging.getLogger(__name__)
@@ -39,6 +40,7 @@ class ContactGenerator:
         self.contact_rate: float = contact_rate
         self.contact_count: int = 0
         self.handle_time: int = handle_time
+        self.hold_probability: float = hold_probability
 
         self.contact_center = contact_center
 
@@ -66,6 +68,7 @@ class ContactGenerator:
             # Generate contact
             contact = Contact(self.env, self.contact_count, self.contact_type,
                               self.contact_count,
+                              hold_probability=self.hold_probability,
                               contact_center=self.contact_center)
 
             # Request an agent to answer the contact
