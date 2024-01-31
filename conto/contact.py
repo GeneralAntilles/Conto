@@ -250,6 +250,8 @@ class Contact:
         # Answer
         self.answer(agent)
         call_duration = call_duration * agent.proficiency
+        hold_probability = random.uniform(self.hold_probability / 2,
+                                          self.hold_probability * 2)
 
         # Hold
         if (
